@@ -21,6 +21,7 @@
     "prefer-const": "error",
     "no-var": "error"
   },
+  "reportUnusedDisableDirectives": "warn",
   "overrides": [
     {
       "files": ["src/cli.ts", "src/cli/**/*.ts"],
