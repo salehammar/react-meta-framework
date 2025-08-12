@@ -60,7 +60,7 @@ jobs:
   build-and-publish:
     needs: test
     runs-on: ubuntu-latest
-    if: github.event_name == 'release' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     
     steps:
     - name: Checkout code
@@ -89,8 +89,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: ${{ github.ref_name }}
+        release_name: Release ${{ github.ref_name }}
         body: |
           ## 🚀 React Meta Framework Release
           
