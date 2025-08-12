@@ -42,6 +42,6 @@
     "ora": "^7.0.0"
   },
   "bin": {
-    "react-meta": "./dist/cli.js"
+    "react-meta": "dist/cli.js"
   }
 }
