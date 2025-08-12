@@ -1,6 +1,6 @@
 {
   "name": "react-meta-framework",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A batteries-included meta-framework for React that eliminates ecosystem fragmentation",
   "main": "dist/index.js",
   "type": "module",
