@@ -148,34 +148,30 @@ export function createDataFetcher(): DataFetcher {
   const fetchSSR = async <T>(url: string, options?: FetchOptions): Promise<T> => {
     const cacheKey = generateCacheKey(url, options);
     
-    try {
-      const response = await fetch(url, {
-        ...options,
-        cache: 'no-store',
-        headers: {
-          'Content-Type': 'application/json',
-          ...options?.headers
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    const response = await fetch(url, {
+      ...options,
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers
       }
+    });
 
-      const data = await response.json();
-      
-      // Cache the result
-      globalCache.set(cacheKey, {
-        data,
-        timestamp: Date.now(),
-        strategy: 'ssr',
-        tags: options?.tags
-      });
-
-      return data;
-    } catch (error) {
-      throw error;
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
+
+    const data = await response.json();
+    
+    // Cache the result
+    globalCache.set(cacheKey, {
+      data,
+      timestamp: Date.now(),
+      strategy: 'ssr',
+      tags: options?.tags
+    });
+
+    return data;
   };
 
   /**
@@ -190,34 +186,30 @@ export function createDataFetcher(): DataFetcher {
       return cached.data;
     }
 
-    try {
-      const response = await fetch(url, {
-        ...options,
-        cache: 'force-cache',
-        headers: {
-          'Content-Type': 'application/json',
-          ...options?.headers
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    const response = await fetch(url, {
+      ...options,
+      cache: 'force-cache',
+      headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers
       }
+    });
 
-      const data = await response.json();
-      
-      // Cache the result permanently
-      globalCache.set(cacheKey, {
-        data,
-        timestamp: Date.now(),
-        strategy: 'ssg',
-        tags: options?.tags
-      });
-
-      return data;
-    } catch (error) {
-      throw error;
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
+
+    const data = await response.json();
+    
+    // Cache the result permanently
+    globalCache.set(cacheKey, {
+      data,
+      timestamp: Date.now(),
+      strategy: 'ssg',
+      tags: options?.tags
+    });
+
+    return data;
   };
 
   /**
@@ -232,35 +224,31 @@ export function createDataFetcher(): DataFetcher {
       return cached.data;
     }
 
-    try {
-      const response = await fetch(url, {
-        ...options,
-        cache: 'default',
-        headers: {
-          'Content-Type': 'application/json',
-          ...options?.headers
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    const response = await fetch(url, {
+      ...options,
+      cache: 'default',
+      headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers
       }
+    });
 
-      const data = await response.json();
-      
-      // Cache with revalidation time
-      globalCache.set(cacheKey, {
-        data,
-        timestamp: Date.now(),
-        revalidateAt: Date.now() + (revalidateSeconds * 1000),
-        strategy: 'isr',
-        tags: options?.tags
-      });
-
-      return data;
-    } catch (error) {
-      throw error;
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
+
+    const data = await response.json();
+    
+    // Cache with revalidation time
+    globalCache.set(cacheKey, {
+      data,
+      timestamp: Date.now(),
+      revalidateAt: Date.now() + (revalidateSeconds * 1000),
+      strategy: 'isr',
+      tags: options?.tags
+    });
+
+    return data;
   };
 
   /**

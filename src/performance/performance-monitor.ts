@@ -138,11 +138,11 @@ export function createPerformanceMonitor(): PerformanceMonitor {
   const thresholdCallbacks: Array<(metric: string, value: number, threshold: number) => void> = [];
 
   // Performance tracking
-  let renderTimes: number[] = [];
-  let memoryReadings: number[] = [];
+  const renderTimes: number[] = [];
+  const memoryReadings: number[] = [];
   let cacheHits = 0;
   let cacheMisses = 0;
-  let requestTimes: number[] = [];
+  const requestTimes: number[] = [];
   let failedRequestCount = 0;
 
   /**

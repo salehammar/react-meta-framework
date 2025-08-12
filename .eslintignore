@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Generated files
+*.d.ts
+*.js.map
+
+# Test files (optional - you can remove this if you want to lint tests)
+tests/
+
+# Configuration files
+*.config.js
+*.config.ts
+
+# Documentation
+docs/
+
+# Examples
+examples/

@@ -347,14 +347,18 @@ export function initializeDevTools() {
     const devTools = createDevTools();
     
     // Add global access for debugging
-    (window as any).__REACT_META_DEVTOOLS__ = devTools;
+    if (typeof globalThis !== 'undefined' && 'window' in globalThis) {
+      (globalThis as any).__REACT_META_DEVTOOLS__ = devTools;
+    }
     
     // Auto-open DevTools on keyboard shortcut
-    document.addEventListener('keydown', (e) => {
-      if (e.ctrlKey && e.shiftKey && e.key === 'D') {
-        devTools.open();
-      }
-    });
+    if (typeof globalThis !== 'undefined' && 'document' in globalThis) {
+      (globalThis as any).document.addEventListener('keydown', (e: any) => {
+        if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+          devTools.open();
+        }
+      });
+    }
 
     console.log('🚀 React Meta Framework DevTools initialized!');
     console.log('Press Ctrl+Shift+D to open DevTools');
