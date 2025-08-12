@@ -1,5 +1,4 @@
-import { createReactiveState } from '../state/reactive-state.js';
-import { createDataFetcher } from '../data/data-fetcher.js';
+import { createReactiveState } from "../state/reactive-state.js";
 
 export interface DevToolsPanel {
   id: string;
@@ -14,7 +13,7 @@ export interface DevTools {
   panels: DevToolsPanel[];
   open: () => void;
   close: () => void;
-  setActivePanel: (panelId: string) => void;
+  setActivePanel: (_panelId: string) => void;
   getStateSnapshot: () => StateSnapshot;
   getPerformanceMetrics: () => PerformanceMetrics;
   getRouteInfo: () => RouteInfo;
@@ -45,7 +44,7 @@ export interface DerivedStateInfo {
 
 export interface DependencyGraph {
   nodes: Map<string, string>;
-  edges: Array<{ from: string; to: string; type: 'derived' | 'effect' }>;
+  edges: Array<{ from: string; to: string; type: "derived" | "effect" }>;
 }
 
 export interface PerformanceMetrics {
@@ -77,15 +76,15 @@ export interface RouteTreeNode {
  */
 export function createDevTools(): DevTools {
   const isOpen = createReactiveState(false);
-  const activePanel = createReactiveState('state');
-  
+  const activePanel = createReactiveState("state");
+
   // Performance monitoring
   const performanceMetrics = createReactiveState<PerformanceMetrics>({
     renderCount: 0,
     averageRenderTime: 0,
     memoryUsage: 0,
     cacheHitRate: 0,
-    revalidationCount: 0
+    revalidationCount: 0,
   });
 
   // State tracking
@@ -93,43 +92,43 @@ export function createDevTools(): DevTools {
     reactiveStates: [],
     derivedStates: [],
     dependencies: { nodes: new Map(), edges: [] },
-    timestamp: Date.now()
+    timestamp: Date.now(),
   });
 
   // Route tracking
   const routeInfo = createReactiveState<RouteInfo>({
-    currentRoute: '',
-    matchedRoute: '',
+    currentRoute: "",
+    matchedRoute: "",
     params: {},
     navigationHistory: [],
-    routeTree: []
+    routeTree: [],
   });
 
   const panels: DevToolsPanel[] = [
     {
-      id: 'state',
-      title: 'Reactive State',
-      component: 'StatePanel',
-      icon: '🔴'
+      id: "state",
+      title: "Reactive State",
+      component: "StatePanel",
+      icon: "🔴",
     },
     {
-      id: 'routing',
-      title: 'Routing',
-      component: 'RoutingPanel',
-      icon: '🛣️'
+      id: "routing",
+      title: "Routing",
+      component: "RoutingPanel",
+      icon: "🛣️",
     },
     {
-      id: 'data',
-      title: 'Data Fetching',
-      component: 'DataPanel',
-      icon: '📡'
+      id: "data",
+      title: "Data Fetching",
+      component: "DataPanel",
+      icon: "📡",
     },
     {
-      id: 'performance',
-      title: 'Performance',
-      component: 'PerformancePanel',
-      icon: '⚡'
-    }
+      id: "performance",
+      title: "Performance",
+      component: "PerformancePanel",
+      icon: "⚡",
+    },
   ];
 
   /**
@@ -164,32 +163,30 @@ export function createDevTools(): DevTools {
     const snapshot: StateSnapshot = {
       reactiveStates: [
         {
-          id: 'counter',
+          id: "counter",
           value: 0,
           subscribers: 2,
           lastUpdate: Date.now(),
-          tags: ['ui', 'counter']
-        }
+          tags: ["ui", "counter"],
+        },
       ],
       derivedStates: [
         {
-          id: 'doubled',
+          id: "doubled",
           value: 0,
-          dependencies: ['counter'],
+          dependencies: ["counter"],
           computationTime: 0.1,
-          lastUpdate: Date.now()
-        }
+          lastUpdate: Date.now(),
+        },
       ],
       dependencies: {
         nodes: new Map([
-          ['counter', 'ReactiveState<number>'],
-          ['doubled', 'DerivedState<number>']
+          ["counter", "ReactiveState<number>"],
+          ["doubled", "DerivedState<number>"],
         ]),
-        edges: [
-          { from: 'counter', to: 'doubled', type: 'derived' }
-        ]
+        edges: [{ from: "counter", to: "doubled", type: "derived" }],
       },
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     stateSnapshot.setValue(snapshot);
@@ -204,7 +201,7 @@ export function createDevTools(): DevTools {
       averageRenderTime: Math.random() * 16,
       memoryUsage: Math.random() * 100,
       cacheHitRate: Math.random(),
-      revalidationCount: Math.floor(Math.random() * 10)
+      revalidationCount: Math.floor(Math.random() * 10),
     };
 
     performanceMetrics.setValue(metrics);
@@ -240,7 +237,7 @@ export function createDevTools(): DevTools {
     setActivePanel,
     getStateSnapshot,
     getPerformanceMetrics,
-    getRouteInfo
+    getRouteInfo,
   };
 }
 
@@ -253,15 +250,15 @@ export function createDevToolsPanel() {
     StatePanel: () => {
       const devTools = createDevTools();
       const snapshot = devTools.getStateSnapshot();
-      
+
       return {
         render: () => {
-          console.group('🔴 Reactive State Panel');
-          console.log('Reactive States:', snapshot.reactiveStates);
-          console.log('Derived States:', snapshot.derivedStates);
-          console.log('Dependency Graph:', snapshot.dependencies);
+          console.group("🔴 Reactive State Panel");
+          console.log("Reactive States:", snapshot.reactiveStates);
+          console.log("Derived States:", snapshot.derivedStates);
+          console.log("Dependency Graph:", snapshot.dependencies);
           console.groupEnd();
-        }
+        },
       };
     },
 
@@ -269,16 +266,16 @@ export function createDevToolsPanel() {
     RoutingPanel: () => {
       const devTools = createDevTools();
       const routeInfo = devTools.getRouteInfo();
-      
+
       return {
         render: () => {
-          console.group('🛣️ Routing Panel');
-          console.log('Current Route:', routeInfo.currentRoute);
-          console.log('Matched Route:', routeInfo.matchedRoute);
-          console.log('Parameters:', routeInfo.params);
-          console.log('Navigation History:', routeInfo.navigationHistory);
+          console.group("🛣️ Routing Panel");
+          console.log("Current Route:", routeInfo.currentRoute);
+          console.log("Matched Route:", routeInfo.matchedRoute);
+          console.log("Parameters:", routeInfo.params);
+          console.log("Navigation History:", routeInfo.navigationHistory);
           console.groupEnd();
-        }
+        },
       };
     },
 
@@ -286,15 +283,24 @@ export function createDevToolsPanel() {
     DataPanel: () => {
       const devTools = createDevTools();
       const performanceMetrics = devTools.getPerformanceMetrics();
-      
+
       return {
         render: () => {
-          console.group('📡 Data Fetching Panel');
-          console.log('Cache Hit Rate:', (performanceMetrics.cacheHitRate * 100).toFixed(1) + '%');
-          console.log('Revalidation Count:', performanceMetrics.revalidationCount);
-          console.log('Memory Usage:', performanceMetrics.memoryUsage.toFixed(2) + ' MB');
+          console.group("📡 Data Fetching Panel");
+          console.log(
+            "Cache Hit Rate:",
+            (performanceMetrics.cacheHitRate * 100).toFixed(1) + "%",
+          );
+          console.log(
+            "Revalidation Count:",
+            performanceMetrics.revalidationCount,
+          );
+          console.log(
+            "Memory Usage:",
+            performanceMetrics.memoryUsage.toFixed(2) + " MB",
+          );
           console.groupEnd();
-        }
+        },
       };
     },
 
@@ -302,17 +308,23 @@ export function createDevToolsPanel() {
     PerformancePanel: () => {
       const devTools = createDevTools();
       const performanceMetrics = devTools.getPerformanceMetrics();
-      
+
       return {
         render: () => {
-          console.group('⚡ Performance Panel');
-          console.log('Render Count:', performanceMetrics.renderCount);
-          console.log('Average Render Time:', performanceMetrics.averageRenderTime.toFixed(2) + 'ms');
-          console.log('Memory Usage:', performanceMetrics.memoryUsage.toFixed(2) + ' MB');
+          console.group("⚡ Performance Panel");
+          console.log("Render Count:", performanceMetrics.renderCount);
+          console.log(
+            "Average Render Time:",
+            performanceMetrics.averageRenderTime.toFixed(2) + "ms",
+          );
+          console.log(
+            "Memory Usage:",
+            performanceMetrics.memoryUsage.toFixed(2) + " MB",
+          );
           console.groupEnd();
-        }
+        },
       };
-    }
+    },
   };
 }
 
@@ -327,40 +339,42 @@ export const performanceMonitor = {
 
   // Track memory usage
   trackMemory: () => {
-    if ('memory' in performance) {
+    if ("memory" in performance) {
       const memory = (performance as any).memory;
-      console.log(`🧠 Memory: ${(memory.usedJSHeapSize / 1024 / 1024).toFixed(2)}MB used / ${(memory.totalJSHeapSize / 1024 / 1024).toFixed(2)}MB total`);
+      console.log(
+        `🧠 Memory: ${(memory.usedJSHeapSize / 1024 / 1024).toFixed(2)}MB used / ${(memory.totalJSHeapSize / 1024 / 1024).toFixed(2)}MB total`,
+      );
     }
   },
 
   // Track cache performance
   trackCache: (hit: boolean, key: string) => {
-    console.log(`💾 Cache ${hit ? 'HIT' : 'MISS'}: ${key}`);
-  }
+    console.log(`💾 Cache ${hit ? "HIT" : "MISS"}: ${key}`);
+  },
 };
 
 /**
  * Development-only DevTools initialization
  */
 export function initializeDevTools() {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === "development") {
     const devTools = createDevTools();
-    
+
     // Add global access for debugging
-    if (typeof globalThis !== 'undefined' && 'window' in globalThis) {
+    if (typeof globalThis !== "undefined" && "window" in globalThis) {
       (globalThis as any).__REACT_META_DEVTOOLS__ = devTools;
     }
-    
+
     // Auto-open DevTools on keyboard shortcut
-    if (typeof globalThis !== 'undefined' && 'document' in globalThis) {
-      (globalThis as any).document.addEventListener('keydown', (e: any) => {
-        if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+    if (typeof globalThis !== "undefined" && "document" in globalThis) {
+      (globalThis as any).document.addEventListener("keydown", (e: any) => {
+        if (e.ctrlKey && e.shiftKey && e.key === "D") {
           devTools.open();
         }
       });
     }
 
-    console.log('🚀 React Meta Framework DevTools initialized!');
-    console.log('Press Ctrl+Shift+D to open DevTools');
+    console.log("🚀 React Meta Framework DevTools initialized!");
+    console.log("Press Ctrl+Shift+D to open DevTools");
   }
 }

@@ -1,7 +1,7 @@
-import { createReactiveState } from '../state/reactive-state.js';
+
 
 export interface CompileOptions {
-  target: 'es2020' | 'es2022' | 'esnext';
+  target: "es2020" | "es2022" | "esnext";
   optimize: boolean;
   analyzeDependencies: boolean;
   generateSourceMaps: boolean;
@@ -9,10 +9,10 @@ export interface CompileOptions {
 }
 
 export interface Compiler {
-  compile: (code: string, options?: CompileOptions) => CompilationResult;
-  analyze: (code: string) => AnalysisResult;
-  optimize: (code: string) => string;
-  generateOptimizations: (analysis: AnalysisResult) => Optimization[];
+  compile: (_code: string, _options?: CompileOptions) => CompilationResult;
+  analyze: (_code: string) => AnalysisResult;
+  optimize: (_code: string) => string;
+  generateOptimizations: (_analysis: AnalysisResult) => Optimization[];
 }
 
 export interface CompilationResult {
@@ -42,7 +42,7 @@ export interface ComponentInfo {
 
 export interface HookInfo {
   name: string;
-  type: 'state' | 'effect' | 'memo' | 'callback' | 'ref' | 'context';
+  type: "state" | "effect" | "memo" | "callback" | "ref" | "context";
   dependencies: string[];
   isOptimized: boolean;
   optimization: string;
@@ -50,7 +50,7 @@ export interface HookInfo {
 
 export interface DependencyInfo {
   variable: string;
-  type: 'primitive' | 'object' | 'function' | 'array';
+  type: "primitive" | "object" | "function" | "array";
   isStable: boolean;
   stabilityReason: string;
   optimization: string;
@@ -64,85 +64,93 @@ export interface EffectInfo {
 }
 
 export interface MemoizationInfo {
-  type: 'useMemo' | 'useCallback' | 'React.memo';
+  type: "useMemo" | "useCallback" | "React.memo";
   dependencies: string[];
   isNecessary: boolean;
   alternative: string;
 }
 
 export interface RenderOptimization {
-  type: 'memo' | 'callback' | 'state' | 'effect';
+  type: "memo" | "callback" | "state" | "effect";
   description: string;
-  impact: 'low' | 'medium' | 'high';
+  impact: "low" | "medium" | "high";
   implementation: string;
 }
 
 export interface PerformanceIssue {
-  type: 'unnecessary-render' | 'memory-leak' | 'expensive-computation' | 'dependency-array';
-  severity: 'warning' | 'error';
+  type:
+    | "unnecessary-render"
+    | "memory-leak"
+    | "expensive-computation"
+    | "dependency-array";
+  severity: "warning" | "error";
   description: string;
   fix: string;
   line: number;
 }
 
 export interface Optimization {
-  type: 'memo' | 'callback' | 'state' | 'effect' | 'dependency';
+  type: "memo" | "callback" | "state" | "effect" | "dependency";
   description: string;
   code: string;
-  impact: 'low' | 'medium' | 'high';
+  impact: "low" | "medium" | "high";
 }
 
 /**
  * Creates a React Forget-like compiler for automatic optimizations
  */
 export function createCompiler(): Compiler {
-  
   /**
    * Compiles and optimizes React code
    */
-  const compile = (code: string, options: CompileOptions = {
-    target: 'es2022',
-    optimize: true,
-    analyzeDependencies: true,
-    generateSourceMaps: false,
-    minify: false
-  }): CompilationResult => {
+  const compile = (
+    _code: string,
+    _options: CompileOptions = {
+      target: "es2022",
+      optimize: true,
+      analyzeDependencies: true,
+      generateSourceMaps: false,
+      minify: false,
+    },
+  ): CompilationResult => {
     const warnings: string[] = [];
     const errors: string[] = [];
-    
+
     try {
       // Analyze the code first
-      const analysis = analyze(code);
-      
+      const analysis = analyze(_code);
+
       // Generate optimizations
       const optimizations = generateOptimizations(analysis);
-      
+
       // Apply optimizations if enabled
-      let optimizedCode = code;
-      if (options.optimize) {
-        optimizedCode = optimize(code);
+      let optimizedCode = _code;
+      if (_options.optimize) {
+        optimizedCode = optimize(_code);
       }
-      
+
       // Generate source maps if requested
       let sourceMap: string | undefined;
-      if (options.generateSourceMaps) {
-        sourceMap = generateSourceMap(code, optimizedCode);
+      if (_options.generateSourceMaps) {
+        sourceMap = generateSourceMap(_code, optimizedCode);
       }
-      
+
       return {
         code: optimizedCode,
         sourceMap,
         optimizations,
         warnings: [...warnings, ...analysis.suggestions],
-        errors
+        errors,
       };
     } catch (error) {
-      errors.push(`Compilation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      errors.push(
+        `Compilation failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
       return {
-        code,
+        code: _code,
         optimizations: [],
         warnings,
-        errors
+        errors,
       };
     }
   };
@@ -150,7 +158,7 @@ export function createCompiler(): Compiler {
   /**
    * Analyzes React code for optimization opportunities
    */
-  const analyze = (code: string): AnalysisResult => {
+  const analyze = (_code: string): AnalysisResult => {
     const components: ComponentInfo[] = [];
     const hooks: HookInfo[] = [];
     const dependencies: DependencyInfo[] = [];
@@ -160,27 +168,27 @@ export function createCompiler(): Compiler {
     // Parse function components
     const functionComponentRegex = /function\s+(\w+)\s*\([^)]*\)\s*{/g;
     let match;
-    
-    while ((match = functionComponentRegex.exec(code)) !== null) {
+
+    while ((match = functionComponentRegex.exec(_code)) !== null) {
       const componentName = match[1];
-      const componentInfo = analyzeComponent(code, componentName, match.index);
+      const componentInfo = analyzeComponent(_code, componentName, match.index);
       components.push(componentInfo);
-      
+
       // Check for performance issues
       const issues = detectPerformanceIssues(componentInfo);
       performanceIssues.push(...issues);
-      
+
       // Generate suggestions
       const componentSuggestions = generateComponentSuggestions(componentInfo);
       suggestions.push(...componentSuggestions);
     }
 
     // Parse hooks usage
-    const hooksInfo = analyzeHooks(code);
+    const hooksInfo = analyzeHooks(_code);
     hooks.push(...hooksInfo);
 
     // Analyze dependencies
-    const depsInfo = analyzeDependencies(code);
+    const depsInfo = analyzeDependencies(_code);
     dependencies.push(...depsInfo);
 
     return {
@@ -188,14 +196,18 @@ export function createCompiler(): Compiler {
       hooks,
       dependencies,
       performanceIssues,
-      suggestions
+      suggestions,
     };
   };
 
   /**
    * Analyzes a specific component
    */
-  const analyzeComponent = (code: string, name: string, startIndex: number): ComponentInfo => {
+  const analyzeComponent = (
+    code: string,
+    name: string,
+    startIndex: number,
+  ): ComponentInfo => {
     const props: string[] = [];
     const state: string[] = [];
     const effects: EffectInfo[] = [];
@@ -203,9 +215,16 @@ export function createCompiler(): Compiler {
     const renderOptimizations: RenderOptimization[] = [];
 
     // Extract props from function parameters
-    const propsMatch = code.substring(startIndex).match(/function\s+\w+\s*\(([^)]*)\)/);
+    const propsMatch = code
+      .substring(startIndex)
+      .match(/function\s+\w+\s*\(([^)]*)\)/);
     if (propsMatch) {
-      props.push(...propsMatch[1].split(',').map(p => p.trim()).filter(p => p));
+      props.push(
+        ...propsMatch[1]
+          .split(",")
+          .map((p) => p.trim())
+          .filter((p) => p),
+      );
     }
 
     // Find useState hooks
@@ -217,39 +236,51 @@ export function createCompiler(): Compiler {
     }
 
     // Find useEffect hooks
-    const useEffectRegex = /useEffect\s*\(\s*\([^)]*\)\s*=>\s*\{[^}]*\},\s*\[([^\]]*)\]\s*\)/g;
+    const useEffectRegex =
+      /useEffect\s*\(\s*\([^)]*\)\s*=>\s*\{[^}]*\},\s*\[([^\]]*)\]\s*\)/g;
     let useEffectMatch;
     while ((useEffectMatch = useEffectRegex.exec(code)) !== null) {
-      const deps = useEffectMatch[1].split(',').map(d => d.trim()).filter(d => d);
+      const deps = useEffectMatch[1]
+        .split(",")
+        .map((d) => d.trim())
+        .filter((d) => d);
       effects.push({
-        hook: 'useEffect',
+        hook: "useEffect",
         dependencies: deps,
-        isOptimized: deps.length > 0
+        isOptimized: deps.length > 0,
       });
     }
 
     // Find useMemo and useCallback
-    const useMemoRegex = /useMemo\s*\(\s*\([^)]*\)\s*=>\s*\{[^}]*\},\s*\[([^\]]*)\]\s*\)/g;
+    const useMemoRegex =
+      /useMemo\s*\(\s*\([^)]*\)\s*=>\s*\{[^}]*\},\s*\[([^\]]*)\]\s*\)/g;
     let useMemoMatch;
     while ((useMemoMatch = useMemoRegex.exec(code)) !== null) {
-      const deps = useMemoMatch[1].split(',').map(d => d.trim()).filter(d => d);
+      const deps = useMemoMatch[1]
+        .split(",")
+        .map((d) => d.trim())
+        .filter((d) => d);
       memoization.push({
-        type: 'useMemo',
+        type: "useMemo",
         dependencies: deps,
         isNecessary: deps.length > 0,
-        alternative: 'Automatic memoization via compiler'
+        alternative: "Automatic memoization via compiler",
       });
     }
 
-    const useCallbackRegex = /useCallback\s*\(\s*\([^)]*\)\s*=>\s*\{[^}]*\},\s*\[([^\]]*)\]\s*\)/g;
+    const useCallbackRegex =
+      /useCallback\s*\(\s*\([^)]*\)\s*=>\s*\{[^}]*\},\s*\[([^\]]*)\]\s*\)/g;
     let useCallbackMatch;
     while ((useCallbackMatch = useCallbackRegex.exec(code)) !== null) {
-      const deps = useCallbackMatch[1].split(',').map(d => d.trim()).filter(d => d);
+      const deps = useCallbackMatch[1]
+        .split(",")
+        .map((d) => d.trim())
+        .filter((d) => d);
       memoization.push({
-        type: 'useCallback',
+        type: "useCallback",
         dependencies: deps,
         isNecessary: deps.length > 0,
-        alternative: 'Automatic callback optimization via compiler'
+        alternative: "Automatic callback optimization via compiler",
       });
     }
 
@@ -259,7 +290,7 @@ export function createCompiler(): Compiler {
       state,
       effects,
       memoization,
-      renderOptimizations
+      renderOptimizations,
     };
   };
 
@@ -272,17 +303,17 @@ export function createCompiler(): Compiler {
     // Find all hook calls
     const hookRegex = /(use\w+)\s*\(/g;
     let hookMatch;
-    
+
     while ((hookMatch = hookRegex.exec(code)) !== null) {
       const hookName = hookMatch[1];
       const hookType = determineHookType(hookName);
-      
+
       hooks.push({
         name: hookName,
         type: hookType,
         dependencies: [],
         isOptimized: false,
-        optimization: ''
+        optimization: "",
       });
     }
 
@@ -292,14 +323,14 @@ export function createCompiler(): Compiler {
   /**
    * Determines the type of a hook
    */
-  const determineHookType = (hookName: string): HookInfo['type'] => {
-    if (hookName === 'useState') return 'state';
-    if (hookName === 'useEffect') return 'effect';
-    if (hookName === 'useMemo') return 'memo';
-    if (hookName === 'useCallback') return 'callback';
-    if (hookName === 'useRef') return 'ref';
-    if (hookName === 'useContext') return 'context';
-    return 'state'; // Default
+  const determineHookType = (hookName: string): HookInfo["type"] => {
+    if (hookName === "useState") return "state";
+    if (hookName === "useEffect") return "effect";
+    if (hookName === "useMemo") return "memo";
+    if (hookName === "useCallback") return "callback";
+    if (hookName === "useRef") return "ref";
+    if (hookName === "useContext") return "context";
+    return "state"; // Default
   };
 
   /**
@@ -311,18 +342,22 @@ export function createCompiler(): Compiler {
     // Find variable declarations
     const varRegex = /(?:const|let|var)\s+(\w+)\s*=/g;
     let varMatch;
-    
+
     while ((varMatch = varRegex.exec(code)) !== null) {
       const varName = varMatch[1];
       const varType = determineVariableType(code, varName);
       const isStable = analyzeStability(code, varName);
-      
+
       dependencies.push({
         variable: varName,
         type: varType,
         isStable,
-        stabilityReason: isStable ? 'Primitive or stable reference' : 'Object or function that may change',
-        optimization: isStable ? 'No optimization needed' : 'Consider useMemo or useCallback'
+        stabilityReason: isStable
+          ? "Primitive or stable reference"
+          : "Object or function that may change",
+        optimization: isStable
+          ? "No optimization needed"
+          : "Consider useMemo or useCallback",
       });
     }
 
@@ -332,67 +367,80 @@ export function createCompiler(): Compiler {
   /**
    * Determines the type of a variable
    */
-  const determineVariableType = (code: string, varName: string): DependencyInfo['type'] => {
-    const varDeclaration = code.match(new RegExp(`(?:const|let|var)\\s+${varName}\\s*=\\s*([^;\\n]+)`));
-    if (!varDeclaration) return 'primitive';
-    
+  const determineVariableType = (
+    code: string,
+    varName: string,
+  ): DependencyInfo["type"] => {
+    const varDeclaration = code.match(
+      new RegExp(`(?:const|let|var)\\s+${varName}\\s*=\\s*([^;\\n]+)`),
+    );
+    if (!varDeclaration) return "primitive";
+
     const value = varDeclaration[1].trim();
-    
-    if (value.startsWith('{') || value.startsWith('[')) return 'object';
-    if (value.includes('=>') || value.includes('function')) return 'function';
-    if (value.includes('[') && value.includes(']')) return 'array';
-    
-    return 'primitive';
+
+    if (value.startsWith("{") || value.startsWith("[")) return "object";
+    if (value.includes("=>") || value.includes("function")) return "function";
+    if (value.includes("[") && value.includes("]")) return "array";
+
+    return "primitive";
   };
 
   /**
    * Analyzes if a variable is stable
    */
   const analyzeStability = (code: string, varName: string): boolean => {
-    const varDeclaration = code.match(new RegExp(`(?:const|let|var)\\s+${varName}\\s*=\\s*([^;\\n]+)`));
+    const varDeclaration = code.match(
+      new RegExp(`(?:const|let|var)\\s+${varName}\\s*=\\s*([^;\\n]+)`),
+    );
     if (!varDeclaration) return true;
-    
+
     const value = varDeclaration[1].trim();
-    
+
     // Primitives are stable
     if (/^[0-9]+$/.test(value)) return true;
     if (/^['"`][^'"`]*['"`]$/.test(value)) return true;
-    if (['true', 'false', 'null', 'undefined'].includes(value)) return true;
-    
+    if (["true", "false", "null", "undefined"].includes(value)) return true;
+
     // Objects, arrays, and functions are not stable
-    if (value.startsWith('{') || value.startsWith('[') || value.includes('=>')) {
+    if (
+      value.startsWith("{") ||
+      value.startsWith("[") ||
+      value.includes("=>")
+    ) {
       return false;
     }
-    
+
     return true;
   };
 
   /**
    * Detects performance issues in components
    */
-  const detectPerformanceIssues = (component: ComponentInfo): PerformanceIssue[] => {
+  const detectPerformanceIssues = (
+    component: ComponentInfo,
+  ): PerformanceIssue[] => {
     const issues: PerformanceIssue[] = [];
 
     // Check for unnecessary re-renders
     if (component.props.length > 0 && component.memoization.length === 0) {
       issues.push({
-        type: 'unnecessary-render',
-        severity: 'warning',
+        type: "unnecessary-render",
+        severity: "warning",
         description: `Component ${component.name} may re-render unnecessarily due to prop changes`,
-        fix: 'Consider using React.memo or automatic compiler optimization',
-        line: 0
+        fix: "Consider using React.memo or automatic compiler optimization",
+        line: 0,
       });
     }
 
     // Check for missing dependency arrays
-    const effectsWithoutDeps = component.effects.filter(e => !e.isOptimized);
-    effectsWithoutDeps.forEach(effect => {
+    const effectsWithoutDeps = component.effects.filter((e) => !e.isOptimized);
+    effectsWithoutDeps.forEach((effect) => {
       issues.push({
-        type: 'dependency-array',
-        severity: 'error',
+        type: "dependency-array",
+        severity: "error",
         description: `useEffect in ${component.name} is missing dependency array`,
-        fix: 'Add dependency array or use automatic compiler optimization',
-        line: 0
+        fix: "Add dependency array or use automatic compiler optimization",
+        line: 0,
       });
     });
 
@@ -406,15 +454,21 @@ export function createCompiler(): Compiler {
     const suggestions: string[] = [];
 
     if (component.memoization.length > 0) {
-      suggestions.push(`Component ${component.name} uses manual memoization - consider removing useMemo/useCallback for automatic optimization`);
+      suggestions.push(
+        `Component ${component.name} uses manual memoization - consider removing useMemo/useCallback for automatic optimization`,
+      );
     }
 
     if (component.props.length > 3) {
-      suggestions.push(`Component ${component.name} has many props - consider grouping related props into objects`);
+      suggestions.push(
+        `Component ${component.name} has many props - consider grouping related props into objects`,
+      );
     }
 
     if (component.state.length > 2) {
-      suggestions.push(`Component ${component.name} has multiple state variables - consider using useReducer for complex state`);
+      suggestions.push(
+        `Component ${component.name} has multiple state variables - consider using useReducer for complex state`,
+      );
     }
 
     return suggestions;
@@ -423,42 +477,44 @@ export function createCompiler(): Compiler {
   /**
    * Generates optimization recommendations
    */
-  const generateOptimizations = (analysis: AnalysisResult): Optimization[] => {
+  const generateOptimizations = (_analysis: AnalysisResult): Optimization[] => {
     const optimizations: Optimization[] = [];
 
     // Component memoization optimizations
-    analysis.components.forEach(component => {
+    _analysis.components.forEach((component: any) => {
       if (component.memoization.length > 0) {
         optimizations.push({
-          type: 'memo',
+          type: "memo",
           description: `Remove manual useMemo/useCallback from ${component.name} - automatic optimization enabled`,
           code: `// Remove: const memoizedValue = useMemo(() => computeValue(), [dep1, dep2]);\n// Use: const memoizedValue = computeValue();`,
-          impact: 'high'
+          impact: "high",
         });
       }
     });
 
     // Effect optimizations
-    analysis.components.forEach(component => {
-      const unoptimizedEffects = component.effects.filter(e => !e.isOptimized);
-      unoptimizedEffects.forEach(effect => {
+    _analysis.components.forEach((component: any) => {
+      const unoptimizedEffects = component.effects.filter(
+        (e: any) => !e.isOptimized,
+      );
+      unoptimizedEffects.forEach((_effect: any) => {
         optimizations.push({
-          type: 'effect',
+          type: "effect",
           description: `Optimize useEffect in ${component.name} with automatic dependency tracking`,
           code: `// Automatic dependency tracking enabled\n// No manual dependency arrays needed`,
-          impact: 'medium'
+          impact: "medium",
         });
       });
     });
 
     // Dependency optimizations
-    analysis.dependencies.forEach(dep => {
+    _analysis.dependencies.forEach((dep: any) => {
       if (!dep.isStable) {
         optimizations.push({
-          type: 'dependency',
+          type: "dependency",
           description: `Stabilize ${dep.variable} for better performance`,
           code: `// Move object/function creation outside component or use useMemo`,
-          impact: 'medium'
+          impact: "medium",
         });
       }
     });
@@ -469,26 +525,29 @@ export function createCompiler(): Compiler {
   /**
    * Applies optimizations to the code
    */
-  const optimize = (code: string): string => {
-    let optimizedCode = code;
+  const optimize = (_code: string): string => {
+    let optimizedCode = _code;
 
     // Remove unnecessary useMemo calls
     optimizedCode = optimizedCode.replace(
       /const\s+(\w+)\s*=\s*useMemo\s*\(\s*\([^)]*\)\s*=>\s*([^,]+),\s*\[([^\]]*)\]\s*\)/g,
-      'const $1 = $2'
+      "const $1 = $2",
     );
 
     // Remove unnecessary useCallback calls
     optimizedCode = optimizedCode.replace(
       /const\s+(\w+)\s*=\s*useCallback\s*\(\s*\([^)]*\)\s*=>\s*([^,]+),\s*\[([^\]]*)\]\s*\)/g,
-      'const $1 = $2'
+      "const $1 = $2",
     );
 
     // Add automatic React.memo for components with props
     const componentRegex = /function\s+(\w+)\s*\([^)]*\)\s*{/g;
-    optimizedCode = optimizedCode.replace(componentRegex, (match, componentName) => {
-      return `const ${componentName} = React.memo(function ${componentName}({ ... }) {`;
-    });
+    optimizedCode = optimizedCode.replace(
+      componentRegex,
+      (match, componentName) => {
+        return `const ${componentName} = React.memo(function ${componentName}({ ... }) {`;
+      },
+    );
 
     return optimizedCode;
   };
@@ -496,13 +555,16 @@ export function createCompiler(): Compiler {
   /**
    * Generates source maps
    */
-  const generateSourceMap = (originalCode: string, optimizedCode: string): string => {
+  const generateSourceMap = (
+    _originalCode: string,
+    _optimizedCode: string,
+  ): string => {
     // Simple source map generation
     return JSON.stringify({
       version: 3,
-      sources: ['original.tsx'],
+      sources: ["original.tsx"],
       names: [],
-      mappings: 'AAAA;AACA;AACA'
+      mappings: "AAAA;AACA;AACA",
     });
   };
 
@@ -510,13 +572,13 @@ export function createCompiler(): Compiler {
     compile,
     analyze,
     optimize,
-    generateOptimizations
+    generateOptimizations,
   };
 }
 
 /**
  * Example of what the compiler will do:
- * 
+ *
  * Input:
  * ```tsx
  * function MyComponent({ data, onUpdate }) {
@@ -525,7 +587,7 @@ export function createCompiler(): Compiler {
  *   return <button onClick={handleClick}>{processedData.length}</button>;
  * }
  * ```
- * 
+ *
  * Output (with automatic optimizations):
  * ```tsx
  * function MyComponent({ data, onUpdate }) {

@@ -1,7 +1,7 @@
-import fs from 'fs-extra';
-import path from 'path';
-import { ecommerceTemplate } from './templates/ecommerce-template.js';
-import { dashboardTemplate } from './templates/dashboard-template.js';
+import fs from "fs-extra";
+import path from "path";
+import { ecommerceTemplate } from "./templates/ecommerce-template.js";
+import { dashboardTemplate } from "./templates/dashboard-template.js";
 
 export interface TemplateConfig {
   name: string;
@@ -17,55 +17,65 @@ export interface TemplateGenerator {
   listTemplates: () => void;
 }
 
-export function generateTemplate(templateType: string, projectName: string): void {
-  console.log(`🚀 Generating ${templateType} template for project: ${projectName}`);
-  
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function generateTemplate(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  templateType: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  projectName: string,
+): void {
+  console.log(
+    `🚀 Generating ${templateType} template for project: ${projectName}`,
+  );
+
   let template: TemplateConfig;
-  
+
   switch (templateType.toLowerCase()) {
-    case 'component':
+    case "component":
       generateComponentTemplate(projectName);
       break;
-    case 'page':
+    case "page":
       generatePageTemplate(projectName);
       break;
-    case 'store':
+    case "store":
       generateStoreTemplate(projectName);
       break;
-    case 'api':
+    case "api":
       generateApiTemplate(projectName);
       break;
-    case 'ecommerce':
+    case "ecommerce":
       template = ecommerceTemplate;
       generateProjectFromTemplate(template, projectName);
       break;
-    case 'dashboard':
+    case "dashboard":
       template = dashboardTemplate;
       generateProjectFromTemplate(template, projectName);
       break;
     default:
       console.log(`❌ Unknown template type: ${templateType}`);
-      console.log('Available template types: component, page, store, api, ecommerce, dashboard');
+      console.log(
+        "Available template types: component, page, store, api, ecommerce, dashboard",
+      );
       return;
   }
-  
+
   console.log(`✅ ${templateType} template generated successfully!`);
 }
 
 export function listTemplates(): void {
-  console.log('📋 Available Templates:');
-  console.log('');
-  console.log('🔧 Component Templates:');
-  console.log('  component - Basic React component');
-  console.log('  page - Page component with routing');
-  console.log('  store - State management store');
-  console.log('  api - API integration template');
-  console.log('');
-  console.log('🚀 Project Templates:');
-  console.log('  ecommerce - Full e-commerce application');
-  console.log('  dashboard - Admin dashboard with analytics');
-  console.log('');
-  console.log('Usage: npx react-meta generate <template-type> <project-name>');
+  console.log("📋 Available Templates:");
+  console.log("");
+  console.log("🔧 Component Templates:");
+  console.log("  component - Basic React component");
+  console.log("  page - Page component with routing");
+  console.log("  store - State management store");
+  console.log("  api - API integration template");
+  console.log("");
+  console.log("🚀 Project Templates:");
+  console.log("  ecommerce - Full e-commerce application");
+  console.log("  dashboard - Admin dashboard with analytics");
+  console.log("");
+  console.log("Usage: npx react-meta generate <template-type> <project-name>");
 }
 
 function generateComponentTemplate(projectName: string): void {
@@ -101,10 +111,10 @@ export function Component({ title, initialValue = 0 }: ComponentProps) {
     </div>
   );
 }`;
-  
+
   const outputPath = path.join(process.cwd(), projectName);
   fs.ensureDirSync(outputPath);
-  fs.writeFileSync(path.join(outputPath, 'Component.tsx'), componentContent);
+  fs.writeFileSync(path.join(outputPath, "Component.tsx"), componentContent);
   console.log(`✅ Component template created at: ${outputPath}/Component.tsx`);
 }
 
@@ -157,10 +167,10 @@ export function Page() {
     </div>
   );
 }`;
-  
+
   const outputPath = path.join(process.cwd(), projectName);
   fs.ensureDirSync(outputPath);
-  fs.writeFileSync(path.join(outputPath, 'Page.tsx'), pageContent);
+  fs.writeFileSync(path.join(outputPath, "Page.tsx"), pageContent);
   console.log(`✅ Page template created at: ${outputPath}/Page.tsx`);
 }
 
@@ -219,10 +229,10 @@ export const computedValues = {
   isDarkMode: () => appStore.theme() === 'dark',
   hasError: () => appStore.error() !== null
 };`;
-  
+
   const outputPath = path.join(process.cwd(), projectName);
   fs.ensureDirSync(outputPath);
-  fs.writeFileSync(path.join(outputPath, 'store.ts'), storeContent);
+  fs.writeFileSync(path.join(outputPath, "store.ts"), storeContent);
   console.log(`✅ Store template created at: ${outputPath}/store.ts`);
 }
 
@@ -320,48 +330,50 @@ export function createApiClient(baseURL: string) {
 // const api = createApiClient('https://api.example.com');
 // const users = await api.get('/users');
 // const newUser = await api.post('/users', { name: 'John' });}`;
-  
+
   const outputPath = path.join(process.cwd(), projectName);
   fs.ensureDirSync(outputPath);
-  fs.writeFileSync(path.join(outputPath, 'api.ts'), apiContent);
+  fs.writeFileSync(path.join(outputPath, "api.ts"), apiContent);
   console.log(`✅ API template created at: ${outputPath}/api.ts`);
 }
 
-function generateProjectFromTemplate(template: TemplateConfig, projectName: string): void {
+function generateProjectFromTemplate(
+  template: TemplateConfig,
+  projectName: string,
+): void {
   console.log(`📁 Creating project structure for: ${projectName}`);
-  
+
   // Create project directory
   const projectDir = path.join(process.cwd(), projectName);
-  
+
   try {
     // Create project directory
     fs.ensureDirSync(projectDir);
-    
+
     // Generate all files from template
     template.files.forEach((file: { path: string; content: string }) => {
       const filePath = path.join(projectDir, file.path);
       const fileDir = path.dirname(filePath);
-      
+
       // Ensure directory exists
       fs.ensureDirSync(fileDir);
-      
+
       // Write file content
       fs.writeFileSync(filePath, file.content);
       console.log(`  ✅ Created: ${file.path}`);
     });
-    
+
     console.log(`\n🎉 Project '${projectName}' created successfully!`);
     console.log(`\n📁 Project structure:`);
     console.log(`  ${projectName}/`);
     template.files.forEach((file: { path: string; content: string }) => {
       console.log(`    ${file.path}`);
     });
-    
+
     console.log(`\n🚀 Next steps:`);
     console.log(`  cd ${projectName}`);
     console.log(`  npm install`);
     console.log(`  npm run dev`);
-    
   } catch (error) {
     console.error(`❌ Error creating project: ${error}`);
     // Cleanup on error
