@@ -495,6 +495,7 @@ export function createCompiler(): Compiler {
       const unoptimizedEffects = component.effects.filter(
         (e: any) => !e.isOptimized,
       );
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       unoptimizedEffects.forEach((_effect: any) => {
         optimizations.push({
           type: "effect",

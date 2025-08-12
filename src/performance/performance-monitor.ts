@@ -286,10 +286,10 @@ export function createPerformanceMonitor(): PerformanceMonitor {
   /**
    * Tracks cache performance
    */
-  const trackCache = (hit: boolean, key: string) => {
+  const trackCache = (_hit: boolean, _key: string) => {
     if (!isMonitoring.value()) return;
 
-    if (hit) {
+    if (_hit) {
       cacheHits++;
     } else {
       cacheMisses++;
@@ -339,7 +339,7 @@ export function createPerformanceMonitor(): PerformanceMonitor {
   /**
    * Tracks state updates
    */
-  const trackStateUpdate = (stateName: string, updateTime: number) => {
+  const trackStateUpdate = (_stateName: string, _updateTime: number) => {
     if (!isMonitoring.value()) return;
 
     const currentMetrics = metrics.value();
@@ -350,7 +350,7 @@ export function createPerformanceMonitor(): PerformanceMonitor {
   /**
    * Tracks effect runs
    */
-  const trackEffect = (effectName: string, runTime: number) => {
+  const trackEffect = (_effectName: string, _runTime: number) => {
     if (!isMonitoring.value()) return;
 
     const currentMetrics = metrics.value();

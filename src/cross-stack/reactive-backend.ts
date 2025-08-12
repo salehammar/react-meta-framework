@@ -120,11 +120,12 @@ export function createReactiveBackendBinding<T>(
   };
 
   // Subscribe to changes
-  const subscribe = (_callback: (value: T) => void) => {
+  const subscribe = (_callback: (_value: T) => void) => {
     return localState.subscribe((state) => _callback(state.value));
   };
 
   // Resolve a conflict
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const resolveConflict = async (
     _conflictId: string,
