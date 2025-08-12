@@ -10,7 +10,10 @@
     "test": "vitest",
     "lint": "eslint src --ext .ts,.tsx",
     "format": "prettier --write src",
-    "create": "tsx src/cli.ts create"
+    "create": "tsx src/cli.ts create",
+    "type-check": "tsc --noEmit",
+    "format:check": "prettier --check src",
+    "check": "npm run lint && npm run type-check && npm run test"
   },
   "keywords": [
     "react",
