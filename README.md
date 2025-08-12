@@ -1,20 +1,33 @@
 # React Meta Framework 🚀
 
-> A batteries-included meta-framework for React that eliminates ecosystem fragmentation and complexity
+> **A revolutionary batteries-included meta-framework for React that eliminates ecosystem fragmentation and complexity**
 
-## 🎯 Vision
+[![npm version](https://badge.fury.io/js/react-meta-framework.svg)](https://badge.fury.io/js/react-meta-framework)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/salehammar/react-meta-framework/blob/main/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/salehammar/react-meta-framework.svg)](https://github.com/salehammar/react-meta-framework/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/salehammar/react-meta-framework.svg)](https://github.com/salehammar/react-meta-framework/network)
+[![CI/CD](https://github.com/salehammar/react-meta-framework/workflows/CI%2FCD%20Pipeline/badge.svg)](https://github.com/salehammar/react-meta-framework/actions)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue.svg)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 
-React Meta Framework aims to solve React's core architectural tensions by providing:
+---
 
-- **Unified State Management**: Reactive primitives that eliminate manual `useMemo`/`useCallback`
-- **Built-in State Machines**: Native statechart functionality for complex logic
-- **Zero-Config Performance**: Compiler-driven optimizations and bundle splitting
-- **Standardized Patterns**: Opinionated conventions for routing, data fetching, and more
-- **Developer Experience**: AI-assisted codegen and intelligent tooling
+## 🎯 **Vision**
 
-## ✨ Key Features
+React Meta Framework aims to solve React's core architectural tensions by providing a unified, opinionated approach that eliminates the complexity of choosing and integrating multiple libraries.
 
-### 🧠 Reactive State System
+### **What We Solve:**
+- ❌ **Ecosystem Fragmentation** → ✅ **Unified Architecture**
+- ❌ **Manual Optimization** → ✅ **Automatic Compiler**
+- ❌ **Complex Setup** → ✅ **Zero-Config Experience**
+- ❌ **State Management Chaos** → ✅ **Reactive Primitives**
+- ❌ **Performance Anxiety** → ✅ **Built-in Monitoring**
+
+---
+
+## ✨ **Key Features**
+
+### 🧠 **Reactive State System**
 ```tsx
 import { createReactiveState } from 'react-meta-framework';
 
@@ -27,7 +40,7 @@ const doubled = counter.derive(value => value * 2);
 <div>Doubled: {doubled()}</div>
 ```
 
-### 🔄 State Machines
+### 🔄 **State Machines**
 ```tsx
 import { createStateMachine } from 'react-meta-framework';
 
@@ -40,7 +53,7 @@ const loadingMachine = createStateMachine('idle', {}, [
 <div>Status: {loadingMachine.currentState}</div>
 ```
 
-### 🛣️ Filesystem Routing
+### 🛣️ **Filesystem Routing**
 ```tsx
 // Automatic route generation from file structure
 // pages/
@@ -50,7 +63,7 @@ const loadingMachine = createStateMachine('idle', {}, [
 //     create.tsx       → /users/create
 ```
 
-### 📡 Smart Data Fetching
+### 📡 **Smart Data Fetching**
 ```tsx
 import { createDataFetcher } from 'react-meta-framework';
 
@@ -63,83 +76,9 @@ const cachedData = await fetcher.fetchSSG('/api/static');
 
 // React hooks with automatic caching
 const { data, isLoading, error, revalidate } = fetcher.useQuery('/api/users');
-
-// Advanced query client with batching and cache invalidation
-const queryClient = createQueryClient();
-await queryClient.invalidateTag('users');
 ```
 
-### 🛠️ DevTools Integration
-```tsx
-import { createDevTools, performanceMonitor } from 'react-meta-framework';
-
-// Multiple panels: State, Routing, Data Fetching, Performance
-const devTools = createDevTools();
-
-// Performance monitoring out of the box
-performanceMonitor.trackRender('UserList', 8.2);
-performanceMonitor.trackCache(true, 'users:list');
-
-// Press Ctrl+Shift+D to open DevTools in development
-```
-
-### ⚡ Automatic Compiler Optimizations
-```tsx
-// No more manual useMemo/useCallback - the compiler handles it all!
-function ExpensiveComponent({ data }) {
-  // This gets automatically optimized by the compiler
-  const processedData = data.map(item => ({
-    ...item,
-    computed: heavyComputation(item)
-  }));
-  
-  return <div>{/* Your JSX */}</div>;
-}
-
-// The compiler automatically:
-// - Removes unnecessary useMemo/useCallback
-// - Adds React.memo where beneficial
-// - Optimizes dependency arrays
-// - Suggests performance improvements
-```
-
-### 📊 Enterprise Performance Monitoring
-```tsx
-import { createPerformanceMonitor } from 'react-meta-framework';
-
-const monitor = createPerformanceMonitor();
-
-// Automatic performance tracking
-monitor.startMonitoring();
-
-// Real-time insights
-const report = monitor.getPerformanceReport();
-console.log(`Performance Grade: ${report.summary.grade}`); // A, B, C, D, F
-
-// Automatic optimization suggestions
-monitor.suggestOptimizations();
-```
-
-### 🎨 Project Templates
-```bash
-# Generate full project templates
-npx react-meta generate ecommerce my-shop
-npx react-meta generate dashboard my-admin
-
-# Generate component templates
-npx react-meta generate component UserCard
-npx react-meta generate store auth-store
-npx react-meta generate api user-api
-```
-
-**Available Templates:**
-- **E-commerce App**: Full-featured shopping application with cart management
-- **Dashboard App**: Admin panel with metrics and user management
-- **Component Templates**: React components with React Meta Framework integration
-- **Store Templates**: State management stores with reactive primitives
-- **API Templates**: API client with state machines and error handling
-
-### 🤖 AI-Assisted Code Generation
+### 🤖 **AI-Assisted Code Generation**
 ```bash
 # Generate React components from design data
 npx react-meta ai design design-spec.json --style tailwind --tests --docs
@@ -149,80 +88,13 @@ npx react-meta ai api api-spec.yaml --framework react --tests --docs
 
 # Get intelligent code suggestions
 npx react-meta ai suggest src/components/UserCard.tsx --context component
-
-# Refactor code automatically
-npx react-meta ai refactor src/components/SlowComponent.tsx --type optimize-performance
 ```
 
-**AI Codegen Features:**
-- **Design-to-Code**: Generate React components from Figma-like design data
-- **API-to-Code**: Generate API clients from OpenAPI specifications
-- **Intelligent Suggestions**: Code analysis and improvement recommendations
-- **Code Refactoring**: Automatic optimization and modernization
+---
 
-### 🧠 Enhanced AI Features
-```tsx
-// Natural language to state machines
-const cartMachine = createStateMachineFromPrompt(
-  "Cart should handle: guest checkout, logged-in user, and payment failure states"
-);
+## 🚀 **Quick Start**
 
-// Real-time performance profiler
-const profiler = createPerformanceProfiler();
-profiler.predictRerenderCascade(componentTree);
-
-// Auto-generated optimization patches
-const patches = await generateOptimizationPatches(componentCode);
-// "Your product list causes 47 unnecessary re-renders - apply fix?"
-```
-
-**Enhanced AI Features:**
-- **Natural Language to State Machines**: Convert descriptions to XState-like statecharts
-- **Real-time Performance Profiler**: Predict re-render cascades before they happen
-- **Auto-generated Optimization Patches**: Generate performance improvement suggestions
-
-### ⚡ Advanced Compiler
-```tsx
-// Context-aware code transforms
-const compiler = createAdvancedCompiler();
-compiler.detectLayoutShiftRisks(code);
-compiler.injectCSSContainment(code);
-
-// Bundle physics engine
-const physics = createBundlePhysicsEngine();
-const impact = physics.predictTTIImpact('@library/analytics');
-// "Estimated bundle impact: +12kb → TTI +300ms (not recommended)"
-```
-
-**Advanced Compiler Features:**
-- **Context-Aware Code Transforms**: Detect layout shift risks and inject CSS containment
-- **Bundle Physics Engine**: Predict TTI impact of dependencies
-- **Advanced Code Transformations**: Convert useState → useReducer when needed
-
-### 🌐 Cross-Stack Reactive Unification
-```tsx
-// Shared reactive state across frontend + backend
-const [globalInventory, setInventory] = useSharedState('products', { 
-  backend: 'cloudflare-d1', 
-  realtime: true 
-});
-
-// Automatic data sync with conflict resolution
-const binding = createReactiveBackendBinding('users', [], {
-  type: 'postgres',
-  realtime: true,
-  conflictResolution: 'crdt'
-});
-```
-
-**Cross-Stack Features:**
-- **Reactive Backend Bindings**: Shared state across frontend + Node.js/Edge
-- **Automatic Data Sync**: Bi-directional sync with databases using reactive queries
-- **Conflict Resolution**: CRDT-based conflict resolution under the hood
-
-## 🚀 Quick Start
-
-### 1. Create a New Project
+### **1. Create a New Project**
 ```bash
 npx react-meta create my-app
 cd my-app
@@ -230,7 +102,7 @@ npm install
 npm run dev
 ```
 
-### 2. Use Reactive State
+### **2. Use Reactive State**
 ```tsx
 import { createReactiveState } from 'react-meta-framework';
 
@@ -248,7 +120,7 @@ function Counter() {
 }
 ```
 
-### 3. Generate Templates
+### **3. Generate Templates**
 ```bash
 # Generate component templates
 npx react-meta generate component MyComponent
@@ -260,7 +132,9 @@ npx react-meta generate api user-api
 npx react-meta generate store auth-store
 ```
 
-## 🏗️ Architecture
+---
+
+## 🏗️ **Architecture**
 
 ```
 src/
@@ -273,19 +147,24 @@ src/
 │   └── data-fetcher.ts
 ├── compiler/        # Automatic optimizations
 │   └── compiler.ts
+├── ai/              # AI-assisted codegen
+│   ├── codegen.ts
+│   └── state-machine-generator.ts
 └── cli/            # Project generation tools
     ├── project-creator.ts
     └── template-generator.ts
 ```
 
-## 🔧 Development
+---
 
-### Prerequisites
+## 🛠️ **Development**
+
+### **Prerequisites**
 - Node.js 18+
 - TypeScript 5.0+
 - pnpm/npm/yarn
 
-### Setup
+### **Setup**
 ```bash
 git clone https://github.com/salehammar/react-meta-framework
 cd react-meta-framework
@@ -293,67 +172,71 @@ npm install
 npm run dev
 ```
 
-### Build
+### **Available Scripts**
 ```bash
-npm run build
+npm run build      # Build the project
+npm test           # Run tests
+npm run lint       # Lint code
+npm run format     # Format code
+npm run check      # Run all checks
 ```
 
-### Test
-```bash
-npm test
-```
+---
 
-### Development Scripts
-```bash
-# Use our development helper script
-./scripts/dev.sh build      # Build the project
-./scripts/dev.sh watch      # Watch mode
-./scripts/dev.sh create     # Create new project
-./scripts/dev.sh demo       # Run demo
-./scripts/dev.sh clean      # Clean build artifacts
-./scripts/dev.sh help       # Show all commands
-```
+## 📚 **Documentation**
 
-## 📚 Documentation
-
-**[📖 Documentation Index](./docs/README.md)** - Complete documentation overview
+### **📖 [Documentation Index](./docs/README.md)** - Complete documentation overview
 
 ### **Core Guides**
-- [Getting Started Guide](./docs/getting-started.md) - Quick start and core concepts
-- [State Management Guide](./docs/state-management.md) - Reactive state and state machines
-- [CLI Reference](./docs/cli.md) - Command-line tools and templates
+- [🚀 Getting Started Guide](./docs/getting-started.md) - Quick start and core concepts
+- [🧠 State Management Guide](./docs/state-management.md) - Reactive state and state machines
+- [🛠️ CLI Reference](./docs/cli.md) - Command-line tools and templates
 
 ### **Advanced Features**
-- [AI Code Generation](./docs/ai-codegen.md) - AI-assisted code generation 🤖
-- [Advanced Features Guide](./docs/advanced-features.md) - Revolutionary AI-powered features 🚀
+- [🤖 AI Code Generation](./docs/ai-codegen.md) - AI-assisted code generation
+- [⚡ Advanced Features Guide](./docs/advanced-features.md) - Revolutionary AI-powered features
 
 ### **System Features**
-- [Routing](./docs/routing.md) - Filesystem-based routing 🛣️
-- [Data Fetching](./docs/data-fetching.md) - Smart data fetching strategies 📡
-- [Compiler](./docs/compiler.md) - Automatic optimizations ⚡
+- [🛣️ Routing](./docs/routing.md) - Filesystem-based routing
+- [📡 Data Fetching](./docs/data-fetching.md) - Smart data fetching strategies
+- [⚡ Compiler](./docs/compiler.md) - Automatic optimizations
 
-## 🎉 Examples
+---
+
+## 🎉 **Examples**
 
 Check out our [examples directory](./examples/) for real-world usage patterns:
 
-- [Todo App](./examples/todo-app/) - Complete todo application with reactive state
-- [AI Codegen](./examples/ai-codegen/) - AI-assisted code generation examples
-- [E-commerce](./examples/ecommerce/) - Full e-commerce application (coming soon)
-- [Dashboard](./examples/dashboard/) - Admin dashboard with analytics (coming soon)
-- [API Integration](./examples/api-integration/) - API integration patterns (coming soon)
+- [✅ Todo App](./examples/todo-app/) - Complete todo application with reactive state
+- [🤖 AI Codegen](./examples/ai-codegen/) - AI-assisted code generation examples
+- [🛒 E-commerce](./examples/ecommerce/) - Full e-commerce application (coming soon)
+- [📊 Dashboard](./examples/dashboard/) - Admin dashboard with analytics (coming soon)
 
-**Project Templates:**
-- **E-commerce Template**: `npx react-meta generate ecommerce my-shop`
-- **Dashboard Template**: `npx react-meta generate dashboard my-admin`
-- **Component Templates**: `npx react-meta generate component <name>`
-- **Store Templates**: `npx react-meta generate store <name>`
-- **API Templates**: `npx react-meta generate api <name>`
+### **Project Templates**
+```bash
+# E-commerce Template
+npx react-meta generate ecommerce my-shop
 
-## 🤝 Contributing
+# Dashboard Template  
+npx react-meta generate dashboard my-admin
+
+# Component Templates
+npx react-meta generate component <name>
+
+# Store Templates
+npx react-meta generate store <name>
+
+# API Templates
+npx react-meta generate api <name>
+```
+
+---
+
+## 🤝 **Contributing**
 
 We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md) for details.
 
-### 🎯 **Current Focus: Advanced Features Implementation**
+### **🎯 Current Focus: Advanced Features Implementation**
 
 We've successfully completed all short-term goals and most medium-term priorities! Now we're implementing advanced features that go beyond the original roadmap:
 
@@ -362,7 +245,7 @@ We've successfully completed all short-term goals and most medium-term prioritie
 - **⚡ Advanced Compiler**: ✅ **COMPLETED** - Context-aware code transforms, bundle physics engine, advanced code transformations
 - **🌐 Cross-Stack Features**: 🚧 **IN PROGRESS** - Reactive backend bindings, automatic data sync engine, visual architecture studio, reactive deployment fabric
 
-### Development Roadmap
+### **Development Roadmap**
 
 #### ✅ **Completed (MVP)**
 - [x] Project structure and CLI foundation
@@ -396,11 +279,15 @@ We've successfully completed all short-term goals and most medium-term prioritie
 - [ ] Visual Architecture Studio
 - [ ] Reactive Deployment Fabric
 
-## 📄 License
+---
+
+## 📄 **License**
 
 MIT License - see [LICENSE](./LICENSE) for details.
 
-## 🙏 Acknowledgments
+---
+
+## 🙏 **Acknowledgments**
 
 - Inspired by [SolidJS](https://solidjs.com/) reactive primitives
 - Built on [React](https://reactjs.org/) ecosystem
@@ -409,6 +296,12 @@ MIT License - see [LICENSE](./LICENSE) for details.
 
 ---
 
-**Made with ❤️ by the Saleh Ammar**
+<div align="center">
+
+**Made with ❤️ by [Saleh Ammar](https://github.com/salehammar)**
 
 *Building the future of React development, one optimization at a time.*
+
+[![GitHub followers](https://img.shields.io/github/followers/salehammar?label=Follow&style=social)](https://github.com/salehammar)
+
+</div>
