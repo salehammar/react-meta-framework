@@ -1,5 +1,3 @@
-
-
 export interface CompileOptions {
   target: "es2020" | "es2022" | "esnext";
   optimize: boolean;

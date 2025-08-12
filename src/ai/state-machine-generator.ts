@@ -1,5 +1,3 @@
-
-
 // Import for type checking - used in generated code strings
 import { createStateMachine as _createStateMachine } from "../state/state-machine.js";
 

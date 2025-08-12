@@ -1,6 +1,4 @@
-import {
-  createReactiveState,
-} from "../state/reactive-state.js";
+import { createReactiveState } from "../state/reactive-state.js";
 
 export interface FetchOptions {
   method?: "GET" | "POST" | "PUT" | "DELETE";
@@ -97,7 +95,9 @@ export function createDataFetcher(): DataFetcher {
   /**
    * Determines the best fetching strategy based on context
    */
-  const determineStrategy = (_options?: FetchOptions): "ssr" | "ssg" | "isr" => {
+  const determineStrategy = (
+    _options?: FetchOptions,
+  ): "ssr" | "ssg" | "isr" => {
     if (_options?.strategy && _options.strategy !== "auto") {
       return _options.strategy;
     }

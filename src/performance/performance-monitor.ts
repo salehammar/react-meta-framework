@@ -1,6 +1,4 @@
-import {
-  createReactiveState,
-} from "../state/reactive-state.js";
+import { createReactiveState } from "../state/reactive-state.js";
 
 export interface PerformanceMetrics {
   // Render performance
@@ -67,7 +65,11 @@ export interface PerformanceMonitor {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   trackCache: (_hit: boolean, _key: string) => void;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  trackRequest: (_url: string, _responseTime: number, _success: boolean) => void;
+  trackRequest: (
+    _url: string,
+    _responseTime: number,
+    _success: boolean,
+  ) => void;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   trackStateUpdate: (_stateName: string, _updateTime: number) => void;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
